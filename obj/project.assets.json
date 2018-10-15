@@ -11501,28 +11501,30 @@
     ]
   },
   "packageFolders": {
-    "/Users/ryan/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\ryand\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ryan/Projects/tabula-rasa-engine/TabulaRasa.Server/TabulaRasa.Server.csproj",
+      "projectUniqueName": "c:\\Users\\ryand\\source\\repos\\tr\\tabula-rasa-server\\TabulaRasa.Server.csproj",
       "projectName": "TabulaRasa.Server",
-      "projectPath": "/Users/ryan/Projects/tabula-rasa-engine/TabulaRasa.Server/TabulaRasa.Server.csproj",
-      "packagesPath": "/Users/ryan/.nuget/packages/",
-      "outputPath": "/Users/ryan/Projects/tabula-rasa-engine/TabulaRasa.Server/obj/",
+      "projectPath": "c:\\Users\\ryand\\source\\repos\\tr\\tabula-rasa-server\\TabulaRasa.Server.csproj",
+      "packagesPath": "C:\\Users\\ryand\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\ryand\\source\\repos\\tr\\tabula-rasa-server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/ryan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ryand\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
