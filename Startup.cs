@@ -31,6 +31,7 @@ namespace TabulaRasa.Server
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
             services.AddSingleton<IConnectionService, ConnectionService>();
+            services.AddHostedService<IGameService, GameService>();
 
            services.AddCors(options =>
             {

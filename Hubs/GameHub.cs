@@ -20,12 +20,13 @@ namespace TabulaRasa.Server.Hubs
 
         public override Task OnConnectedAsync()
         {
-            _connectionService.CreateConnection(Context.ConnectionId, ConnectionType.WebSocket);
+            _connectionService.Connect(Context.ConnectionId, ConnectionType.WebSocket);
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
+            _connectionService.Disconnect(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
     }

@@ -13,10 +13,9 @@ namespace TabulaRasa.Server.Services
 {
     public class ConnectionService : IConnectionService
     {
+        private readonly ConcurrentDictionary<string, Connection> _connections;
         private readonly ILogger _logger;
         private readonly IHubContext<GameHub> _gameHub;
-        private readonly ConcurrentDictionary<string, Connection> _connections;
-
 
         public ConnectionService(ILogger<ConnectionService> logger, IHubContext<GameHub> gameHub)
         {
@@ -25,12 +24,17 @@ namespace TabulaRasa.Server.Services
             _connections = new ConcurrentDictionary<string, Connection>();
         }
 
-        public bool CreateConnection(string connectionId, ConnectionType type)
+        public event EventHandler<ConnectEventArgs> ClientConnected;
+        public event EventHandler<ConnectEventArgs> ClientDisconnected;
+
+        public bool Connect(string connectionId, ConnectionType type)
         {
+            Connected?.Invoke(this, new ConnectEventArgs(connectionId));
+           //(connectionId, $"Hello from {connectionId}!");
             return _connections.TryAdd(connectionId, new Connection(type));
         }
 
-        public void DeleteConnection(string connectionId)
+        public void Disconnect(string connectionId)
         {
             _connections.Remove(connectionId, out var connection);
         }

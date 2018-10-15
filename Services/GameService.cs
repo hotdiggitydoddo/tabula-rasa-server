@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TabulaRasa.Server.Domain;
 
 namespace TabulaRasa.Server.Services
 {
@@ -12,10 +13,23 @@ namespace TabulaRasa.Server.Services
         private readonly IConnectionService _connectionService;
         private Timer _timer;
 
+        private void OnConnected(object sender, ConnectEventArgs eventArgs) 
+        {
+            _connectionService.SendOutput(eventArgs.ConnectionId, $"Hello, {eventArgs.ConnectionId}, from GAME SERVICE!");
+        }
+
+        private void OnDisconnected(object sender, ConnectEventArgs eventArgs)
+        {
+            _connectionService.SendOutput(eventArgs.ConnectionId, $"Goodbye, {eventArgs.ConnectionId}, from GAME SERVICE!");
+        }
+
+
         public GameService(ILogger<GameService> logger, IConnectionService connectionService)
         {
             _logger = logger;
             _connectionService = connectionService;
+            _connectionService.ClientConnected += OnConnected;
+            _connectionService.ClientDisconnected += OnDisconnected;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -45,11 +59,8 @@ namespace TabulaRasa.Server.Services
         public void Dispose()
         {
             _timer?.Dispose();
-        }
-
-        public void ReceiveInput(string connectionId, string input)
-        {
-            _connectionService.SendOutput(connectionId, $"GameService says back, \"input\"");
+            _connectionService.ClientConnected -= OnConnected;
+            _connectionService.ClientDisconnected -= OnDisconnected;
         }
     }
 }
