@@ -46,9 +46,9 @@ namespace TabulaRasa.Server.Services
             return _connections.Values;
         }
 
-        public void SendOutput(string connectionId, string output)
+        public async Task SendOutputAsync(string connectionId, string output)
         {
-            _gameHub.Clients.Client(connectionId).SendAsync("receiveMessage", output).GetAwaiter().GetResult();
+            await _gameHub.Clients.Client(connectionId).SendAsync("receiveMessage", output);
         }
     }
 }

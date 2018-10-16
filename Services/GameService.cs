@@ -18,8 +18,8 @@ namespace TabulaRasa.Server.Services
         {
             _logger = logger;
             _connectionService = connectionService;
-            _connectionService.ClientConnected += OnConnected;
-            _connectionService.ClientDisconnected += OnDisconnected;
+            _connectionService.ClientConnected += async (s, e) => await OnConnectedAsync(s, e);
+            _connectionService.ClientDisconnected += async (s, e) => await OnDisconnectedAsync(s, e);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -44,8 +44,8 @@ namespace TabulaRasa.Server.Services
         public void Dispose()
         {
             _timer?.Dispose();
-            _connectionService.ClientConnected -= OnConnected;
-            _connectionService.ClientDisconnected -= OnDisconnected;
+            _connectionService.ClientConnected -= async (s, e) => await OnConnectedAsync(s, e);
+            _connectionService.ClientDisconnected -= async (s, e) => await OnDisconnectedAsync(s, e);
         }
 
 
@@ -53,14 +53,15 @@ namespace TabulaRasa.Server.Services
         {
             _logger.LogInformation("Timed Background Service is working.");
         }
-        private void OnConnected(object sender, ConnectEventArgs eventArgs)
+        
+        private async Task OnConnectedAsync(object sender, ConnectEventArgs eventArgs)
         {
-            _connectionService.SendOutput(eventArgs.ConnectionId, $"Hello, {eventArgs.ConnectionId}, from GAME SERVICE!");
+            await _connectionService.SendOutputAsync(eventArgs.ConnectionId, $"Hello, {eventArgs.ConnectionId}, from GAME SERVICE!");
         }
 
-        private void OnDisconnected(object sender, ConnectEventArgs eventArgs)
+        private async Task OnDisconnectedAsync(object sender, ConnectEventArgs eventArgs)
         {
-            _connectionService.SendOutput(eventArgs.ConnectionId, $"Goodbye, {eventArgs.ConnectionId}, from GAME SERVICE!");
+            await _connectionService.SendOutputAsync(eventArgs.ConnectionId, $"Goodbye, {eventArgs.ConnectionId}, from GAME SERVICE!");
         }
     }
 }

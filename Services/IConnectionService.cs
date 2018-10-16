@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TabulaRasa.Server.Domain;
 
 namespace TabulaRasa.Server.Services
@@ -9,7 +10,7 @@ namespace TabulaRasa.Server.Services
         bool Connect(string connectionId, ConnectionType type);
         void Disconnect(string connectionId);
         IEnumerable<Connection> GetConnections();
-        void SendOutput(string connectionId, string output);
+        Task SendOutputAsync(string connectionId, string output);
 
         event EventHandler<ConnectEventArgs> ClientConnected;
         event EventHandler<ConnectEventArgs> ClientDisconnected;
