@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -49,6 +50,16 @@ namespace TabulaRasa.Server.Services
         public async Task SendOutputAsync(string connectionId, string output)
         {
             await _gameHub.Clients.Client(connectionId).SendAsync("receiveMessage", output);
+        }
+
+        public async Task SendOutputAsync(IEnumerable<string> connectionIds, string output)
+        {
+            await _gameHub.Clients.Clients(connectionIds.ToList()).SendAsync("receiveMessage", output);
+        }
+
+        public async Task BroadcastAsync(string output)
+        {
+            await _gameHub.Clients.All.SendAsync(output);
         }
     }
 }
