@@ -16,6 +16,8 @@ namespace TabulaRasa.Server.Services
         private readonly ConcurrentDictionary<string, Connection> _connections;
         private readonly ILogger _logger;
         private readonly IHubContext<GameHub> _gameHub;
+        //TODO: Add support for telnet connections here
+
 
         public ConnectionService(ILogger<ConnectionService> logger, IHubContext<GameHub> gameHub)
         {
@@ -29,13 +31,13 @@ namespace TabulaRasa.Server.Services
 
         public bool Connect(string connectionId, ConnectionType type)
         {
-            Connected?.Invoke(this, new ConnectEventArgs(connectionId));
-           //(connectionId, $"Hello from {connectionId}!");
+            ClientConnected?.Invoke(this, new ConnectEventArgs(connectionId));
             return _connections.TryAdd(connectionId, new Connection(type));
         }
 
         public void Disconnect(string connectionId)
         {
+            ClientDisconnected?.Invoke(this, new ConnectEventArgs(connectionId));
             _connections.Remove(connectionId, out var connection);
         }
 

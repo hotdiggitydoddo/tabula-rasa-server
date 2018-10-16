@@ -13,16 +13,6 @@ namespace TabulaRasa.Server.Services
         private readonly IConnectionService _connectionService;
         private Timer _timer;
 
-        private void OnConnected(object sender, ConnectEventArgs eventArgs) 
-        {
-            _connectionService.SendOutput(eventArgs.ConnectionId, $"Hello, {eventArgs.ConnectionId}, from GAME SERVICE!");
-        }
-
-        private void OnDisconnected(object sender, ConnectEventArgs eventArgs)
-        {
-            _connectionService.SendOutput(eventArgs.ConnectionId, $"Goodbye, {eventArgs.ConnectionId}, from GAME SERVICE!");
-        }
-
 
         public GameService(ILogger<GameService> logger, IConnectionService connectionService)
         {
@@ -42,11 +32,6 @@ namespace TabulaRasa.Server.Services
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
-        {
-            _logger.LogInformation("Timed Background Service is working.");
-        }
-
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Timed Background Service is stopping.");
@@ -61,6 +46,21 @@ namespace TabulaRasa.Server.Services
             _timer?.Dispose();
             _connectionService.ClientConnected -= OnConnected;
             _connectionService.ClientDisconnected -= OnDisconnected;
+        }
+
+
+        private void DoWork(object state)
+        {
+            _logger.LogInformation("Timed Background Service is working.");
+        }
+        private void OnConnected(object sender, ConnectEventArgs eventArgs)
+        {
+            _connectionService.SendOutput(eventArgs.ConnectionId, $"Hello, {eventArgs.ConnectionId}, from GAME SERVICE!");
+        }
+
+        private void OnDisconnected(object sender, ConnectEventArgs eventArgs)
+        {
+            _connectionService.SendOutput(eventArgs.ConnectionId, $"Goodbye, {eventArgs.ConnectionId}, from GAME SERVICE!");
         }
     }
 }
