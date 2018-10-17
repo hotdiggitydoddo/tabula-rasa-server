@@ -13,7 +13,6 @@ namespace TabulaRasa.Server.Services
         private readonly IConnectionService _connectionService;
         private Timer _timer;
 
-
         public GameService(ILogger<GameService> logger, IConnectionService connectionService)
         {
             _logger = logger;
