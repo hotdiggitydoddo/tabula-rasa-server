@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -14,14 +15,17 @@ namespace TabulaRasa.Server.Services.Caching
     {
         #region Fields
 
-        private readonly Lazy<string> _connectionString;
+        private readonly string _connectionString;
 
         private volatile ConnectionMultiplexer _connection;
         private readonly object _lock = new object();
 
         #endregion
        
-
+        public RedisConnectionWrapper(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetValue<string>("RedisCacheSettings:ConnectionString", "localhost"); 
+        }
 
         #region Utilities
 
@@ -44,7 +48,7 @@ namespace TabulaRasa.Server.Services.Caching
                 }
 
                 //Creating new instance of Redis Connection
-                _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
+                _connection = ConnectionMultiplexer.Connect(_connectionString);
             }
 
             return _connection;
