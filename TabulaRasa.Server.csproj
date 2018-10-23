@@ -9,5 +9,6 @@
     <PackageReference Include="Microsoft.AspNetCore.App"/>
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All"/>
     <PackageReference Include="StackExchange.Redis" Version="2.0.513"/>
+    <PackageReference Include="MoonSharp" Version="2.0.0"/>
   </ItemGroup>
 </Project>

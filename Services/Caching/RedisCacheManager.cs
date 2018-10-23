@@ -15,18 +15,16 @@ namespace TabulaRasa.Server.Services.Caching
         #region Fields
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly IDatabase _db;
-        private readonly ICacheManager _perRequestCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public RedisCacheManager(string connectionString, IRedisConnectionWrapper connectionWrapper, ICacheManager cacheManager)
+        public RedisCacheManager(IRedisConnectionWrapper connectionWrapper)
         {
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             this._connectionWrapper = connectionWrapper;
             this._db = _connectionWrapper.GetDatabase();
-            this._perRequestCacheManager = cacheManager;
         }
 
         #endregion
@@ -62,15 +60,12 @@ namespace TabulaRasa.Server.Services.Caching
             //little performance workaround here:
             //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server 500 times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get<T>(key);
 
             var rValue = _db.StringGet(key);
             if (!rValue.HasValue)
                 return default(T);
             var result = Deserialize<T>(rValue);
 
-            _perRequestCacheManager.Set(key, result, 0);
             return result;
         }
 
@@ -86,8 +81,9 @@ namespace TabulaRasa.Server.Services.Caching
                 return;
 
             var entryBytes = Serialize(data);
-            TimeSpan? expiresIn = TimeSpan.FromMinutes(cacheTime.Value);
-
+            TimeSpan? expiresIn = null;
+            if (cacheTime.HasValue)
+                expiresIn = TimeSpan.FromSeconds(cacheTime.Value);
             _db.StringSet(key, entryBytes, expiresIn);
         }
 
@@ -101,8 +97,6 @@ namespace TabulaRasa.Server.Services.Caching
             //little performance workaround here:
             //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server 500 times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return true;
 
             return _db.KeyExists(key);
         }
@@ -114,7 +108,6 @@ namespace TabulaRasa.Server.Services.Caching
         public void Remove(string key)
         {
             _db.KeyDelete(key);
-            _perRequestCacheManager.Remove(key);
         }
 
         /// <summary>

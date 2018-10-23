@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TabulaRasa.Server.Hubs;
 using TabulaRasa.Server.Services;
+using TabulaRasa.Server.Services.Caching;
 using TabulaRasa.Server.Utilities;
 
 namespace TabulaRasa.Server
@@ -31,7 +32,10 @@ namespace TabulaRasa.Server
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
             services.AddSingleton<IConnectionService, ConnectionService>();
+            services.AddSingleton<IScriptService, ScriptService>();
             services.AddHostedService<IGameService, GameService>();
+            services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+            services.AddSingleton<ICacheManager, RedisCacheManager>();
 
            services.AddCors(options =>
             {
